@@ -1,11 +1,22 @@
-import { Activity, Cpu, Zap, ArrowRight, Server } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Activity, Cpu, Zap, ArrowRight, Server, Wifi, WifiOff } from "lucide-react";
 
 export function Dashboard() {
+    const [health, setHealth] = useState<{ status: string } | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [logCount, setLogCount] = useState(0);
+
+    useEffect(() => {
+        fetch("/api/health").then(r => r.json()).then(d => setHealth(d)).catch(e => setError(String(e)));
+        fetch("/api/logs/stats").then(r => r.json()).then(d => setLogCount(d.total || 0)).catch(() => {});
+    }, []);
+
+    const connected = health?.status === "ok";
     const stats = [
-        { title: 'Node Status', value: 'Online', change: 'Stable', icon: Server, color: 'text-emerald-400' },
-        { title: 'System Load', value: 'Nominal', change: 'Minimal', icon: Cpu, color: 'text-blue-400' },
-        { title: 'API Bridge', value: 'Active', change: 'SEP-1577', icon: Activity, color: 'text-purple-400' },
-        { title: 'Missions', value: '3 Ready', change: 'Arazzo 1.0', icon: Zap, color: 'text-amber-400' },
+        { title: 'Backend', value: connected ? 'Online' : 'Offline', change: connected ? 'Connected' : 'Error', icon: connected ? Wifi : WifiOff, color: connected ? 'text-emerald-400' : 'text-red-400' },
+        { title: 'Log Entries', value: String(logCount), change: 'Ring buffer', icon: Activity, color: 'text-blue-400' },
+        { title: 'API Bridge', value: connected ? 'Active' : 'Down', change: 'FastMCP', icon: Server, color: connected ? 'text-purple-400' : 'text-red-400' },
+        { title: 'Status', value: error ? 'Error' : 'Healthy', change: error ? error : 'All nominal', icon: Zap, color: error ? 'text-red-400' : 'text-amber-400' },
     ];
 
     return (
@@ -13,11 +24,14 @@ export function Dashboard() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold gradient-text tracking-tight uppercase">Dashboard</h1>
-                    <p className="text-slate-500 mt-1">Guten Morgen, Sandra. Moltbot node is operating within nominal parameters.</p>
+                    <p className="text-slate-500 mt-1">Moltbot node — {connected ? 'operating within nominal parameters' : 'connection issue detected'}.</p>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${connected ? 'bg-emerald-950/40 text-emerald-400' : 'bg-red-950/40 text-red-400'}`}>
+                    <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`} />
+                    {connected ? 'Online' : 'Offline'}
                 </div>
             </div>
 
-            {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat) => (
                     <div key={stat.title} className="glass-card p-6 group hover:border-white/20 transition-all cursor-pointer">
