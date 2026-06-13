@@ -1,0 +1,26 @@
+[
+  {
+    "name": "gateway-status",
+    "description": "Check if Moltbot Gateway is reachable",
+    "tools": ["moltbot_ops"],
+    "example": "moltbot_ops(operation=\"status\")"
+  },
+  {
+    "name": "send-message",
+    "description": "Send a message via Moltbot to a recipient",
+    "tools": ["moltbot_ops"],
+    "example": "moltbot_ops(operation=\"send\", message=\"Reminder: meeting at 3pm\", to=\"+1234567890\")"
+  },
+  {
+    "name": "agent-run",
+    "description": "Trigger Moltbot agent with a prompt",
+    "tools": ["moltbot_ops"],
+    "example": "moltbot_ops(operation=\"agent\", message=\"What did I last discuss about the project?\", thinking=\"low\")"
+  },
+  {
+    "name": "help-tools",
+    "description": "Get multilevel help",
+    "tools": ["help"],
+    "example": "help(level=\"intermediate\", topic=\"tools\")"
+  }
+]

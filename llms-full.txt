@@ -1,0 +1,281 @@
+# moltbot-mcp
+> - **Integration**: [mcp-central-docs Moltbot series](https://github.com/sandraschi/mcp-central-docs/tree/main/docs/integrations#moltbot-clawdbot) - **Moltbot upstream**: [docs.molt.bot](https://docs.m...
+
+Generated on: 2026-03-03 00:01:28
+
+## Docs - Full Content
+
+### Readme
+Source: docs\README.md
+```
+# Moltbot MCP Documentation
+
+- **Integration**: [mcp-central-docs Moltbot series](https://github.com/sandraschi/mcp-central-docs/tree/main/docs/integrations#moltbot-clawdbot)
+- **Moltbot upstream**: [docs.molt.bot](https://docs.molt.bot)
+
+## Tools
+
+- `moltbot_ops`: status, health, send, agent, channels.
+- `help`: Multilevel help.
+
+## Config
+
+Env prefix `MOLTBOT_MCP_`:
+
+- `GATEWAY_HOST` (default `127.0.0.1`)
+- `GATEWAY_PORT` (default `18789`)
+- `GATEWAY_TOKEN` (optional)
+- `USE_WS` (default `true`)
+
+```
+
+### Readme
+Source: README.md
+```
+# Moltbot MCP
+
+MCP server for [Moltbot](https://github.com/moltbot/moltbot) (ClawdBot) Gateway: status, health, send, agent, channels. FastMCP 2.14+.
+
+**Repo:** [github.com/sandraschi/moltbot-mcp](https://github.com/sandraschi/moltbot-mcp) (private)
+
+### First-time git push
+
+If you just cloned or scaffolded locally:
+
+```powershell
+cd D:\Dev\repos\moltbot-mcp
+if (Test-Path .git\config.lock) { Remove-Item -Force .git\config.lock }
+git init
+git remote add origin https://github.com/sandraschi/moltbot-mcp.git
+git add -A
+git commit -m "chore: initial scaffold"
+git branch -M main
+git push -u origin main
+```
+
+Or run `.\scripts\setup-git-remote.ps1` after removing the lock, then add/commit/push.
+
+## Install
+
+```powershell
+cd D:\Dev\repos\moltbot-mcp
+uv sync
+# or: pip install -e .
+```
+
+## Config
+
+Env prefix `MOLTBOT_MCP_`:
+
+| Var | Default | Description |
+|-----|---------|-------------|
+| `GATEWAY_HOST` | `127.0.0.1` | Moltbot Gateway host |
+| `GATEWAY_PORT` | `18789` | Gateway port |
+| `GATEWAY_TOKEN` | - | Optional auth token |
+| `USE_WS` | `true` | Use WebSocket |
+
+## Run MCP (stdio)
+
+```powershell
+uv run moltbot-mcp
+# or: python -m moltbot_mcp
+```
+
+## Tools
+
+- **moltbot_ops** — `status` \| `health` \| `send` \| `agent` \| `channels`. Portmanteau.
+- **help** — Multilevel help.
+
+## Webapp
+
+Dark React + Vite + Tailwind dashboard. Probes Gateway WS and shows reachability, status, health.
+
+**Two terminals:**
+
+```powershell
+# Terminal 1: API (Gateway probe) on 18101
+uv sync --extra web
+.\webapp\run-api.ps1
+```
+
+```powershell
+# Terminal 2: Frontend on 18100 (proxies /api to 18101)
+cd webapp
+npm install
+npm run dev
+```
+
+Open http://localhost:18100. The dashboard fetches `/api/gateway`, shows Gateway reachable/unreachable, URL, error if any, and expandable status/health payloads.
+
+## 📦 Packaging & Distribution
+
+This repository is SOTA 2026 compliant and uses the officially validated `@anthropic-ai/mcpb` workflow for distribution.
+
+### Pack Extension
+To generate a `.mcpb` distribution bundle with complete source code and automated build exclusions:
+```bash
+# SOTA 2026 standard pack command
+mcpb pack . dist/moltbot-mcp.mcpb
+```
+
+## Tests
+
+```powershell
+uv run pytest -v
+```
+
+## References
+
+- [Moltbot](https://github.com/moltbot/moltbot) · [docs.molt.bot](https://docs.molt.bot)
+- [MCP Central Moltbot series](https://github.com/sandraschi/mcp-central-docs/tree/main/docs/integrations#moltbot-clawdbot)
+
+
+## 🚀 Installation
+
+### Prerequisites
+- [uv](https://docs.astral.sh/uv/) installed (RECOMMENDED)
+- Python 3.12+
+
+### 📦 Quick Start
+Run immediately via `uvx`:
+```bash
+uvx moltbot-mcp
+```
+
+### 🎯 Claude Desktop Integration
+Add to your `claude_desktop_config.json`:
+```json
+"mcpServers": {
+  "moltbot-mcp": {
+    "command": "uv",
+    "args": ["--directory", "D:/Dev/repos/moltbot-mcp", "run", "moltbot-mcp"]
+  }
+}
+```
+```
+
+## Configuration - Full Content
+
+### Pyproject
+Source: pyproject.toml
+```
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "moltbot-mcp"
+version = "0.1.0"
+description = "MCP server for Moltbot (ClawdBot) Gateway: status, send, agent, and bridge tools"
+authors = [{ name = "Sandra Schi" }]
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "fastmcp>=2.14.5",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+    "ruff>=0.14.14",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.3.0",
+]
+web = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "websockets>=14.0",
+]
+
+[project.scripts]
+moltbot-mcp = "moltbot_mcp.server:run"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/moltbot_mcp"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+asyncio_mode = "auto"
+addopts = "-v"
+
+[tool.coverage.run]
+source = ["src/moltbot_mcp"]
+omit = ["*/tests/*", "*/__pycache__/*", "*/venv/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.mcpb]
+name = "moltbot-mcp"
+version = "0.1.0"
+description = "MCP server for Moltbot Gateway bridge and control"
+keywords = ["moltbot", "clawdbot", "gateway", "mcp", "fastmcp", "assistant"]
+
+```
+
+### Package
+Source: webapp\package.json
+```
+{
+  "name": "moltbot-mcp-dashboard",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "~5.2.2",
+    "vite": "^5.3.1"
+  }
+}
+
+```

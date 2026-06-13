@@ -1,0 +1,89 @@
+{
+  "manifest_version": "0.2",
+  "name": "moltbot-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Moltbot (ClawdBot) Gateway: status, health, send, agent, channels",
+  "long_description": "FastMCP 2.14+ bridge from MCP clients (Cursor, Claude Desktop) to a local Moltbot Gateway. Tools: moltbot_ops (status, health, send, agent, channels) and multilevel help. Configure via MOLTBOT_MCP_* env. Protocol 2025-11-25.",
+  "author": {
+    "name": "Sandra Schi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sandraschi/moltbot-mcp"
+  },
+  "homepage": "https://github.com/sandraschi/moltbot-mcp",
+  "documentation": "https://github.com/sandraschi/moltbot-mcp/blob/main/README.md",
+  "license": "MIT",
+  "engines": {
+    "python": ">=3.11"
+  },
+  "keywords": [
+    "moltbot",
+    "clawdbot",
+    "gateway",
+    "mcp",
+    "fastmcp",
+    "assistant",
+    "bridge"
+  ],
+  "mcp": {
+    "protocol_version": "2025-11-25",
+    "capabilities": {
+      "tools": true,
+      "resources": false,
+      "prompts": true,
+      "sampling": false
+    }
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "moltbot_mcp.mcp_server:main",
+    "mcp_config": {
+      "command": "moltbot-mcp",
+      "args": [],
+      "env": {
+        "MOLTBOT_MCP_GATEWAY_HOST": "${user_config.gateway_host}",
+        "MOLTBOT_MCP_GATEWAY_PORT": "${user_config.gateway_port}",
+        "MOLTBOT_MCP_GATEWAY_TOKEN": "${user_config.gateway_token}"
+      }
+    }
+  },
+  "user_config": {
+    "gateway_host": {
+      "type": "string",
+      "title": "Gateway host",
+      "description": "Moltbot Gateway host (default 127.0.0.1)",
+      "required": false,
+      "default": "127.0.0.1"
+    },
+    "gateway_port": {
+      "type": "string",
+      "title": "Gateway port",
+      "description": "Moltbot Gateway port (default 18789)",
+      "required": false,
+      "default": "18789"
+    },
+    "gateway_token": {
+      "type": "string",
+      "title": "Gateway token",
+      "description": "Optional; required if Gateway enforces CLAWDBOT_GATEWAY_TOKEN",
+      "required": false,
+      "sensitive": true,
+      "default": ""
+    }
+  },
+  "tools": [
+    {
+      "name": "moltbot_ops",
+      "description": "Portmanteau: status, health, send, agent, channels. Gateway operations."
+    },
+    {
+      "name": "help",
+      "description": "Multilevel help (basic/intermediate/advanced/expert) and topics."
+    }
+  ],
+  "compatibility": {
+    "platforms": ["win32", "darwin", "linux"],
+    "python_version": ">=3.11"
+  }
+}

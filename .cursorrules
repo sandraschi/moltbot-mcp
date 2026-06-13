@@ -1,0 +1,5 @@
+# Moltbot MCP
+
+- **Consult central docs**: `D:\Dev\repos\mcp-central-docs\` (STANDARDS.md, docs/fastmcp, docs/patterns).
+- **FastMCP 2.14+**, portmanteau tools, no emojis in code/logs.
+- **PowerShell**: no `&&`, `||`, `mkdir`, `ls`, etc. Use `;`, `New-Item`, `Get-ChildItem`.
