@@ -18,9 +18,7 @@ def test_mcp_name() -> None:
 
 def test_mcp_instructions_non_empty() -> None:
     """FastMCP app has non-empty instructions."""
-    instructions = getattr(_mcp.mcp, "instructions", None) or getattr(
-        _mcp.mcp, "_instructions", None
-    )
+    instructions = getattr(_mcp.mcp, "instructions", None) or getattr(_mcp.mcp, "_instructions", None)
     if instructions is None:
         # FastMCP 2.14 may store it elsewhere
         instructions = getattr(_mcp.mcp, "get_instructions", lambda: "")()

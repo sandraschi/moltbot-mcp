@@ -6,7 +6,8 @@ import {
     Settings,
     ChevronLeft,
     ChevronRight,
-    Zap
+    Zap,
+    ScrollText
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -22,6 +23,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         { href: '/chat', label: 'AI Command', icon: Bot },
         { href: '/missions', label: 'Missions', icon: Zap },
         { href: '/settings', label: 'Settings', icon: Settings },
+    { href: '/logging', label: 'Logging', icon: ScrollText },
     ];
 
     return (

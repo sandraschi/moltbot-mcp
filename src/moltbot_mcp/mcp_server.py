@@ -4,7 +4,8 @@ from moltbot_mcp._mcp import mcp
 
 # Import tools so they register on mcp
 from moltbot_mcp.tools import help, moltbot_ops  # noqa: F401
-from .transport import run_server, run_server_async
+
+from .transport import run_server
 
 
 def main() -> None:

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from moltbot_mcp.config import Settings, settings
 
 
@@ -22,9 +20,7 @@ def test_gateway_ws_url_default() -> None:
     assert s.gateway_ws_url == "ws://127.0.0.1:18789"
 
 
-def test_gateway_ws_url_with_overrides(
-    override_gateway_host: None, override_gateway_port: None
-) -> None:
+def test_gateway_ws_url_with_overrides(override_gateway_host: None, override_gateway_port: None) -> None:
     """gateway_ws_url reflects MOLTBOT_MCP_GATEWAY_HOST and PORT."""
     s = Settings()
     assert "testhost" in s.gateway_ws_url

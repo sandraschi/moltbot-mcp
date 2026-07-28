@@ -3,10 +3,11 @@
 import logging
 from typing import Literal
 
-from fastmcp import Context, Result, Image
+from fastmcp import Context, Image, Result
+from robofang.core.moltbook import MoltbookClient
+
 from moltbot_mcp._mcp import mcp
 from moltbot_mcp.config import settings
-from robofang.core.moltbook import MoltbookClient
 
 logger = logging.getLogger(__name__)
 
@@ -70,9 +71,7 @@ async def moltbot_moltbook(
                 )
             result = await client.get("/feed", params={"limit": "1"})
             if result.get("success"):
-                return Result(
-                    text="Moltbook API is reachable and authenticated.", data={"success": True}
-                )
+                return Result(text="Moltbook API is reachable and authenticated.", data={"success": True})
             return Result(text=f"Moltbook error: {result.get('message')}", data=result)
 
         if operation == "feed":
@@ -102,17 +101,13 @@ async def moltbot_moltbook(
 
         if operation == "post":
             if not content:
-                return Result(
-                    text="What would you like to post to Moltbook?", data={"success": False}
-                )
+                return Result(text="What would you like to post to Moltbook?", data={"success": False})
             data = await client.post("/posts", json_data={"content": content})
             return Result(text="Post successfully broadcast to the network.", data=data)
 
         if operation == "comment":
             if not post_id or not content:
-                return Result(
-                    text="I need both a post_ID and content to comment.", data={"success": False}
-                )
+                return Result(text="I need both a post_ID and content to comment.", data={"success": False})
             data = await client.post(f"/posts/{post_id}/comments", json_data={"content": content})
             return Result(text="Successfully commented on the thread.", data=data)
 
@@ -158,7 +153,7 @@ async def moltbot_moltbook(
 
         if operation == "heartbeat_dm":
             data = await client.get("/agents/dm/inbox")
-            return Result(text=f"Inbound messages retrieved.", data=data)
+            return Result(text="Inbound messages retrieved.", data=data)
 
         if operation == "heartbeat_run":
             # Simplified heartbeat
@@ -167,6 +162,6 @@ async def moltbot_moltbook(
         return Result(text=f"Invalid operation: {operation}", data={"success": False})
     except Exception as e:
         logger.error(f"moltbot_moltbook failed: {e}")
-        return Result(text=f"Internal error: {str(e)}", data={"success": False})
+        return Result(text=f"Internal error: {e!s}", data={"success": False})
     finally:
         await client.close()

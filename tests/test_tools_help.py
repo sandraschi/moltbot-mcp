@@ -13,7 +13,7 @@ async def test_help_levels(level: str) -> None:
     """help returns markdown with requested level in title."""
     out = await help_tool(level=level)
     assert isinstance(out, str)
-    assert f"Moltbot MCP Help" in out
+    assert "Moltbot MCP Help" in out
     assert level in out
     assert "Quick start" in out
     assert "moltbot_ops" in out or "MOLTBOT_MCP" in out

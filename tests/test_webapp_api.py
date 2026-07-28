@@ -1,12 +1,12 @@
 """Tests for webapp FastAPI backend (api only, no live Gateway)."""
 
-import pytest
-from fastapi.testclient import TestClient
-
 # Import app from webapp server; we need to run from repo root and have webapp on path
 # or import via sys.path. Prefer importing from installed package or path.
 import sys
 from pathlib import Path
+
+import pytest
+from fastapi.testclient import TestClient
 
 webapp_root = Path(__file__).resolve().parent.parent / "webapp"
 sys.path.insert(0, str(webapp_root))
