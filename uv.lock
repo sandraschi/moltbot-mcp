@@ -817,6 +817,7 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "python-dotenv" },
     { name = "ruff" },
+    { name = "websockets" },
 ]
 
 [package.optional-dependencies]
@@ -851,6 +852,7 @@ requires-dist = [
     { name = "ruff", specifier = ">=0.16.0,<0.17" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.16.0,<0.17" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'web'", specifier = ">=0.32.0" },
+    { name = "websockets", specifier = ">=14.0" },
     { name = "websockets", marker = "extra == 'web'", specifier = ">=14.0" },
 ]
 provides-extras = ["dev", "web"]

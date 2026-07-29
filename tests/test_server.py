@@ -1,4 +1,4 @@
-"""Tests for Moltbot MCP server and tools."""
+"""Tests for Moltbot MCP server and tools (validation + graceful errors)."""
 
 import pytest
 
@@ -14,36 +14,30 @@ async def test_help_basic() -> None:
 
 
 @pytest.mark.asyncio
-async def test_moltbot_ops_status() -> None:
-    r = await moltbot_ops(operation="status")
-    assert r["success"] is True
-    assert r["result"]["operation"] == "status"
-
-
-@pytest.mark.asyncio
-async def test_moltbot_ops_health() -> None:
-    r = await moltbot_ops(operation="health")
-    assert r["success"] is True
-    assert r["result"]["operation"] == "health"
-
-
-@pytest.mark.asyncio
-async def test_moltbot_ops_send_requires_message_and_to() -> None:
+async def test_moltbot_ops_send_requires_to() -> None:
     r = await moltbot_ops(operation="send", message="hi")
     assert r["success"] is False
-    assert "to" in r.get("message", "").lower() or "missing" in r.get("message", "").lower()
+    assert "missing" in str(r.get("error", ""))
 
 
 @pytest.mark.asyncio
 async def test_moltbot_ops_agent_requires_message() -> None:
     r = await moltbot_ops(operation="agent")
     assert r["success"] is False
-    assert "message" in r.get("message", "").lower() or "missing" in r.get("message", "").lower()
+    assert "missing" in str(r.get("error", ""))
 
 
 @pytest.mark.asyncio
-async def test_moltbot_ops_agent_with_message() -> None:
-    r = await moltbot_ops(operation="agent", message="hello")
-    assert r["success"] is True
-    assert r["result"]["operation"] == "agent"
-    assert r["result"]["message"] == "hello"
+async def test_moltbot_ops_status_no_gateway() -> None:
+    """status returns error gracefully without a running Gateway."""
+    r = await moltbot_ops(operation="status")
+    assert r["success"] is False
+    assert r.get("error_type") in ("connection", "missing_dep")
+
+
+@pytest.mark.asyncio
+async def test_moltbot_ops_health_no_gateway() -> None:
+    """health returns error gracefully without a running Gateway."""
+    r = await moltbot_ops(operation="health")
+    assert r["success"] is False
+    assert r.get("error_type") in ("connection", "missing_dep")
