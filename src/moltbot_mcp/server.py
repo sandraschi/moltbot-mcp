@@ -21,7 +21,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Register tools on the shared FastMCP instance.
-from moltbot_mcp.tools import help, moltbot_ops  # noqa: F401
+from moltbot_mcp.tools import help, moltbot_ops, moltbot_shutdown, show_moltbot_status_card  # noqa: F401
 
 try:
     from moltbot_mcp.tools import moltbook  # noqa: F401

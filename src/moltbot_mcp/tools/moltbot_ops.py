@@ -9,7 +9,10 @@ from moltbot_mcp.config import settings
 logger = logging.getLogger(__name__)
 
 
-@mcp.tool()
+_ANNOTATIONS = {"readonly": True}
+
+
+@mcp.tool(annotations=_ANNOTATIONS)
 async def moltbot_ops(
     operation: Literal["status", "health", "send", "agent", "channels"],
     message: str | None = None,
@@ -26,14 +29,13 @@ async def moltbot_ops(
         Requires message.
     CHANNELS: List connected channels and their status. No extra args.
 
-    Args:
-        operation: One of status, health, send, agent, channels.
-        message: Required for send and agent. Content to send or agent prompt.
-        to: Required for send. Recipient (e.g. +1234567890, channel id).
-        thinking: For agent only. Thinking level (off..xhigh). Default low.
+    ## Return Format
+    {"success": bool, "message": str, "result": {"operation": str, ...} | "error": str}
 
-    Returns:
-        Structured dict with success, message, and result (or error).
+    ## Examples
+    moltbot_ops(operation="status")
+    moltbot_ops(operation="health")
+    moltbot_ops(operation="send", message="Hello", to="+1234567890")
     """
     # Placeholder: real impl would connect to Gateway WS and call methods.
     base = {

@@ -34,3 +34,8 @@ Thumbs.db
 target/
 
 _dashboard/
+reports/
+*.bak
+*.bak.*
+*.mcpb
+mcpb/src/

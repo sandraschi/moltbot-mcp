@@ -53,12 +53,12 @@ logging.getLogger("fastapi").setLevel(logging.WARNING)
 GATEWAY_HOST = os.environ.get("MOLTBOT_MCP_GATEWAY_HOST", "127.0.0.1")
 GATEWAY_PORT = int(os.environ.get("MOLTBOT_MCP_GATEWAY_PORT", "18789"))
 GATEWAY_WS = f"ws://{GATEWAY_HOST}:{GATEWAY_PORT}"
-API_PORT = int(os.environ.get("MOLTBOT_DASHBOARD_API_PORT", "18101"))
+API_PORT = int(os.environ.get("MOLTBOT_DASHBOARD_API_PORT", "10731"))
 
 app = FastAPI(title="Moltbot MCP Dashboard API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:18100", "http://127.0.0.1:18100"],
+    allow_origins=["http://localhost:10730", "http://127.0.0.1:10730"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

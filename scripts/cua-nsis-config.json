@@ -3,7 +3,7 @@
     "install_dir": "%LOCALAPPDATA%\\Moltbot MCP",
     "operator_exe": "moltbot-mcp-native.exe",
     "backend_process_names": ["moltbot-mcp-native", "moltbot-mcp-backend"],
-    "backend_port": 10700,
+    "backend_port": 10731,
     "health_path": "/api/v1/health",
     "diagnostics_path": "/api/v1/diagnostics",
     "feature_smoke_path": "/api/v1/system/info",

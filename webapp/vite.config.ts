@@ -15,7 +15,7 @@ export default defineConfig({
     port: 10730,
     strictPort: true,
     proxy: {
-      "/api": "http://127.0.0.1:18101",
+      "/api": "http://127.0.0.1:10731",
     },
   },
 });

@@ -2,20 +2,22 @@
 
 from moltbot_mcp._mcp import mcp
 
+_ANNOTATIONS = {"readonly": True}
 
-@mcp.tool()
+
+@mcp.tool(annotations=_ANNOTATIONS)
 async def help(
     level: str = "basic",
     topic: str | None = None,
 ) -> str:
     """Help for Moltbot MCP (levels: basic, intermediate, advanced, expert).
 
-    Args:
-        level: basic | intermediate | advanced | expert.
-        topic: Optional. tools | config | examples | troubleshooting.
+    ## Return Format
+    Markdown string with help content.
 
-    Returns:
-        Markdown help content.
+    ## Examples
+    help(level="basic")
+    help(level="advanced", topic="config")
     """
     base = f"# Moltbot MCP Help — {level}\n\n"
     if topic:

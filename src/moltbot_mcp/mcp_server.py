@@ -3,7 +3,7 @@
 from moltbot_mcp._mcp import mcp
 
 # Import tools so they register on mcp
-from moltbot_mcp.tools import help, moltbot_ops  # noqa: F401
+from moltbot_mcp.tools import help, moltbot_ops, moltbot_shutdown, show_moltbot_status_card  # noqa: F401
 
 from .transport import run_server
 

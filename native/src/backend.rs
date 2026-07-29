@@ -13,7 +13,7 @@ pub struct BackendProcess(pub Mutex<Option<Child>>);
 
 // -- PER-REPO: Customize these constants --
 const BACKEND_NAME: &str = "moltbot-mcp-backend.exe";
-const BACKEND_PORT: u16 = 10700;
+const BACKEND_PORT: u16 = 10731;
 const BACKEND_TAG: &str = "moltbot-mcp-backend-x86_64-pc-windows-msvc.exe";
 const ENV_PORT: &str = "MOLTBOT_MCP_PORT";
 const ENV_HOST: &str = "MOLTBOT_MCP_HOST";
@@ -128,8 +128,8 @@ pub fn spawn_backend(app: AppHandle, state: &BackendProcess) -> Result<String, S
 
     log_line(
         &app,
-        &format!("spawning {} (cwd {}) on port 10700",
-            backend_path.display(), workdir.display()),
+        &format!("spawning {} (cwd {}) on port {}",
+            backend_path.display(), workdir.display(), BACKEND_PORT),
     );
 
     let mut command = Command::new(&backend_path);
@@ -165,7 +165,7 @@ pub fn spawn_backend(app: AppHandle, state: &BackendProcess) -> Result<String, S
         thread::spawn(move || watch_backend_stream(err, app_handle));
     }
 
-    Ok(format!("Backend starting on port 10700"))
+    Ok(format!("Backend starting on port {BACKEND_PORT}"))
 }
 
 fn watch_backend_stream<R: std::io::Read + Send + 'static>(stream: R, app: AppHandle) {
