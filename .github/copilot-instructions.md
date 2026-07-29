@@ -1,9 +1,3 @@
-# Moltbot MCP
-
-- **Consult central docs**: `D:\Dev\repos\mcp-central-docs\` (STANDARDS.md, docs/fastmcp, docs/patterns).
-- **FastMCP 3.4+**, portmanteau tools, no emojis in code/logs.
-- **PowerShell**: no `&&`, `||`, `mkdir`, `ls`, etc. Use `;`, `New-Item`, `Get-ChildItem`.
-
 ## Session Context (Moltbot MCP)
 
 You have access to the Moltbot (ClawdBot) Gateway via MCP tools.

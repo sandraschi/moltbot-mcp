@@ -1,0 +1,13 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/2025/schema.json",
+  "name": "moltbot-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Moltbot (ClawdBot) Gateway bridge",
+  "categories": ["Gateways", "Assistant"],
+  "tools": [
+    { "name": "moltbot_ops", "description": "Portmanteau: status, health, send, agent, channels" },
+    { "name": "help", "description": "Multilevel help (basic/intermediate/advanced/expert)" },
+    { "name": "moltbot_shutdown", "description": "Gracefully shut down the server" },
+    { "name": "show_moltbot_status_card", "description": "Prefab UI status card" }
+  ]
+}

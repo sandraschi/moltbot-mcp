@@ -1,5 +1,7 @@
 """FastAPI substrate for Moltbot MCP (fleet health + MCP HTTP mount)."""
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -64,4 +66,30 @@ async def status():
         "version": "0.1.0",
         "tool_count": 3,
         "providers": {"gateway": {"host": "127.0.0.1", "port": 18789}},
+    }
+
+
+@app.get("/api/skills")
+async def list_skills():
+    skills_dir = Path(__file__).parent.parent / "skills"
+    if skills_dir.exists():
+        return [d.name for d in skills_dir.iterdir() if d.is_dir()]
+    return []
+
+
+@app.get("/api/v1/diagnostics")
+async def diagnostics():
+    tools_list = []
+    try:
+        tools_list = [{"name": t.name, "description": t.description} for t in mcp._tool_manager.list_tools()]
+    except Exception:
+        pass
+    return {
+        "status": "ok",
+        "server": "moltbot-mcp",
+        "version": "0.1.0",
+        "tool_count": len(tools_list),
+        "tools": tools_list,
+        "system": {"windows": True},
+        "errors": [],
     }

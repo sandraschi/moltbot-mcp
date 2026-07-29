@@ -1,0 +1,6 @@
+{
+  "name": "moltbot-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Moltbot Gateway bridge and control",
+  "hooks": "../hooks/hooks.json"
+}

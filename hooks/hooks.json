@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "text",
+            "text": "## Session Context (Moltbot MCP)\n\nYou have access to the Moltbot (ClawdBot) Gateway via MCP tools.\n\n**Before starting work:**\n1. Check gateway status: `moltbot_ops(operation=\"status\")`\n2. List available operations: `help(level=\"basic\")`\n\n**At end of work:**\n- Send any pending messages via the gateway."
+          }
+        ]
+      }
+    ]
+  }
+}

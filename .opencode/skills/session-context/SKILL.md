@@ -1,8 +1,7 @@
-# Moltbot MCP
-
-- **Consult central docs**: `D:\Dev\repos\mcp-central-docs\` (STANDARDS.md, docs/fastmcp, docs/patterns).
-- **FastMCP 3.4+**, portmanteau tools, no emojis in code/logs.
-- **PowerShell**: no `&&`, `||`, `mkdir`, `ls`, etc. Use `;`, `New-Item`, `Get-ChildItem`.
+---
+name: session-context
+description: Moltbot MCP tool-awareness — gateway ops, config, and usage patterns
+---
 
 ## Session Context (Moltbot MCP)
 
