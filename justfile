@@ -15,6 +15,8 @@ bootstrap:
     uv sync --all-extras
     Set-Location '{{justfile_directory()}}\webapp'
     npm install
+    Set-Location '{{justfile_directory()}}'
+    if (Test-Path '.pre-commit-config.yaml') { pre-commit install 2>$null }
 
 # Serve the MCP server (stdio mode)
 serve:

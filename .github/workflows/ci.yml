@@ -1,7 +1,9 @@
 name: CI
 on:
   push:
-    tags: ["v*"]
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
   workflow_dispatch:
 
 jobs:
@@ -9,10 +11,16 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: astral-sh/setup-uv@v3
         with:
-          python-version: "3.11"
-      - run: pip install uv
+          python-version: "3.12"
       - run: uv sync --all-extras
-      - run: uv run ruff check src tests
-      - run: uv run pytest -v tests
+      - run: uv run ruff check src/
+      - run: uv run ruff format src/ --check
+      - run: uv run pytest -v tests/
+      - name: Frontend build
+        working-directory: webapp
+        run: |
+          npm ci
+          npx tsc --noEmit
+          npm run build

@@ -8,6 +8,21 @@ New-Item -ItemType Directory -Force -Path $ResourceDir, $DevDir | Out-Null
 
 Write-Host "=== ${RepoName} Tauri Release Build ===" -ForegroundColor Cyan
 
+$BACKEND_PORT = 10731
+
+# Step 0: Verify API_BASE matches backend port (catches "Failed to fetch")
+$apiFile = Join-Path $Root "webapp\src\api\client.ts"
+if (Test-Path $apiFile) {
+    $apiContent = Get-Content $apiFile -Raw
+    if ($apiContent -match "127\.0\.0\.1:(\d+)") {
+        $apiPort = [int]$Matches[1]
+        if ($apiPort -ne $BACKEND_PORT) {
+            throw "API_BASE in $apiFile points to port $apiPort but backend serves on $BACKEND_PORT."
+        }
+        Write-Host "  API_BASE port: $apiPort (matches backend) V" -ForegroundColor Green
+    }
+}
+
 # Step 1: TypeScript lint gate + frontend build
 $frontendDirs = @("web_sota", "webapp/frontend", "webapp")
 foreach ($dir in $frontendDirs) {
@@ -59,13 +74,18 @@ if (Test-Path $specFile) {
     Write-Host "  WARNING: spec file not found at $specFile - using existing backend exe if present" -ForegroundColor DarkYellow
 }
 
-# Step 3: Embed in Tauri resources (+ dev fallback)
+# Step 3: Embed in Tauri resources (+ dev fallback) with size gate
 Write-Host "-> [3/4] Embedding backend..." -ForegroundColor Yellow
 $src = "$Root\dist\${RepoName}-backend.exe"
 if (-not (Test-Path $src)) { throw "Backend exe not found at $src - PyInstaller step failed" }
+# Size gate: real onefile >= 5 MB
+$sizeMB = (Get-Item $src).Length / 1MB
+if ($sizeMB -lt 5) {
+    throw "Backend exe is only $([math]::Round($sizeMB, 1)) MB at $src - empty/broken binary"
+}
+Write-Host "  Backend exe: $sizeMB MB"
 Copy-Item $src "$ResourceDir\${RepoName}-backend.exe" -Force
 Copy-Item $src "$DevDir\${RepoName}-backend-$Triple.exe" -Force
-Write-Host "  Backend exe: $((Get-Item $src).Length / 1MB) MB"
 
 # Bundle .env.example (NOT .env — dev .env has personal API keys)
 $envSrc = "$Root\.env.example"
@@ -91,6 +111,16 @@ $nsisDir = "$PSScriptRoot\target\release\bundle\nsis"
 if (Test-Path $nsisDir) { Copy-Item "$nsisDir\*-setup.exe" "$distDir\" -Force }
 $strayExe = "$PSScriptRoot\target\release\moltbot-mcp-backend.exe"
 if (Test-Path $strayExe) { Remove-Item $strayExe -Force; Write-Host "  Cleaned stray: $strayExe" -ForegroundColor DarkGray }
+
+# Final size gate: NSIS installer >= 1 MB
+$nsisFiles = Get-ChildItem "$nsisDir\*-setup.exe" -ErrorAction SilentlyContinue
+if ($nsisFiles) {
+    $nsisSize = $nsisFiles[0].Length / 1MB
+    if ($nsisSize -lt 1) {
+        throw "NSIS installer is only $([math]::Round($nsisSize, 1)) MB - likely missing backend"
+    }
+    Write-Host "  NSIS installer: $([math]::Round($nsisSize, 1)) MB V" -ForegroundColor Green
+}
 
 Write-Host "=== Build complete ===" -ForegroundColor Green
 Write-Host "Ship: $nsisDir\*.exe"

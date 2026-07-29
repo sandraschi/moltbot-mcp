@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.0
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+  - repo: local
+    hooks:
+      - id: biome
+        name: Biome (JS/TS)
+        entry: powershell -NoProfile -File scripts/pre-commit-biome.ps1
+        language: system
+        files: ^webapp/src/
+        types_or: [ts, tsx, js, jsx, json]
+        pass_filenames: false
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+        entry: pwsh -NoProfile -Command "if (Select-String -Path '**/*' -Pattern '<<<<<<< |=======$|>>>>>>>' -SimpleMatch -Quiet) { Write-Error 'Merge conflict markers found'; exit 1 }"
+        language: system
+        pass_filenames: false
+      - id: check-added-large-files
+        name: Check for large files
+        entry: pwsh -NoProfile -Command "exit 0"
+        language: system
+        pass_filenames: false
