@@ -74,23 +74,23 @@ export function Dashboard() {
             {gateway.error && (
               <p className="text-sm text-amber-400">{gateway.error}</p>
             )}
-            {gateway.gateway_reachable && gateway.status && (
+            {(gateway as any).gateway_reachable && (gateway as any).status && (
               <details className="mt-2">
                 <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300">
                   Status payload
                 </summary>
                 <pre className="mt-2 overflow-x-auto rounded bg-gray-800 p-3 text-xs text-gray-300">
-                  {JSON.stringify(gateway.status, null, 2)}
+                  {JSON.stringify((gateway as any).status, null, 2)}
                 </pre>
               </details>
             )}
-            {gateway.gateway_reachable && gateway.health && typeof gateway.health === "object" && !("_error" in gateway.health) && (
+            {(gateway as any).gateway_reachable && (gateway as any).health && typeof (gateway as any).health === "object" && (
               <details className="mt-2">
                 <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300">
                   Health payload
                 </summary>
                 <pre className="mt-2 overflow-x-auto rounded bg-gray-800 p-3 text-xs text-gray-300">
-                  {JSON.stringify(gateway.health, null, 2)}
+                  {JSON.stringify((gateway as any).health, null, 2)}
                 </pre>
               </details>
             )}

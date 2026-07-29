@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from moltbot_mcp._mcp import mcp
@@ -75,6 +75,14 @@ async def list_skills():
     if skills_dir.exists():
         return [d.name for d in skills_dir.iterdir() if d.is_dir()]
     return []
+
+
+@app.get("/api/skills/{skill_name}")
+async def get_skill(skill_name: str):
+    skill_path = Path(__file__).parent.parent / "skills" / skill_name / "SKILL.md"
+    if skill_path.exists():
+        return skill_path.read_text(encoding="utf-8")
+    raise HTTPException(status_code=404, detail=f"Skill '{skill_name}' not found")
 
 
 @app.get("/api/v1/diagnostics")

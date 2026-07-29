@@ -1,38 +1,42 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Layout } from "./components/Layout";
 import { Dashboard } from "./pages/Dashboard";
+import { Chat } from "./pages/Chat";
+import { Tools } from "./pages/Tools";
+import { Skills } from "./pages/Skills";
+import { Settings } from "./pages/Settings";
+import { HelpPage } from "./pages/HelpPage";
 import { Docs } from "./pages/Docs";
 
-const DOC_SECTION_IDS = [
-  "docs", "intro", "moltbot-overview", "moltbot-architecture", "moltbot-channels",
-  "moltbot-tools", "moltbot-nodes", "moltbot-security", "mcp-overview", "mcp-moltbot-ops",
-  "mcp-help", "mcp-config", "mcp-usage", "dashboard",
-];
-
-function isDocsHash() {
-  const h = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
-  return h === "docs" || DOC_SECTION_IDS.includes(h);
-}
+export type View = "dashboard" | "chat" | "tools" | "skills" | "settings" | "help" | "docs";
 
 function App() {
-  const [view, setView] = useState<"dashboard" | "docs">(() =>
-    typeof window !== "undefined" && isDocsHash() ? "docs" : "dashboard"
-  );
+  const [view, setView] = useState<View>("dashboard");
 
-  useEffect(() => {
-    const onHash = () => setView(isDocsHash() ? "docs" : "dashboard");
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, []);
-
-  const handleNavigate = (v: "dashboard" | "docs") => {
-    setView(v);
-    window.location.hash = v === "docs" ? "#docs" : "";
+  const renderPage = () => {
+    switch (view) {
+      case "dashboard":
+        return <Dashboard />;
+      case "chat":
+        return <Chat />;
+      case "tools":
+        return <Tools />;
+      case "skills":
+        return <Skills />;
+      case "settings":
+        return <Settings />;
+      case "help":
+        return <HelpPage />;
+      case "docs":
+        return <Docs />;
+      default:
+        return <Dashboard />;
+    }
   };
 
   return (
-    <Layout activeView={view} onNavigate={handleNavigate}>
-      {view === "dashboard" ? <Dashboard /> : <Docs />}
+    <Layout activeView={view} onNavigate={setView}>
+      {renderPage()}
     </Layout>
   );
 }
