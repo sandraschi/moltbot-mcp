@@ -87,7 +87,7 @@ Write-Host "  Backend exe: $sizeMB MB"
 Copy-Item $src "$ResourceDir\${RepoName}-backend.exe" -Force
 Copy-Item $src "$DevDir\${RepoName}-backend-$Triple.exe" -Force
 
-# Bundle .env.example (NOT .env — dev .env has personal API keys)
+# Bundle .env.example (NOT .env - dev .env has personal API keys)
 $envSrc = "$Root\.env.example"
 if (Test-Path $envSrc) {
     Copy-Item $envSrc "$ResourceDir\.env.example" -Force

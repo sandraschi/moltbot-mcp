@@ -1,13 +1,13 @@
 set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
 import 'scripts/just/fleet.just'
 
-# ── Default ───────────────────────────────────────────────────────────────────
+# --- Default ---
 
 # List available recipes
 default:
     @just --list
 
-# ── Development ────────────────────────────────────────────────────────────────
+# --- Development ---
 
 # Install dependencies and setup
 bootstrap:
@@ -31,7 +31,7 @@ dev:
     Set-Location '{{justfile_directory()}}\webapp'
     npm run dev
 
-# ── Quality ────────────────────────────────────────────────────────────────────
+# --- Quality ---
 
 # Run Ruff linting
 lint:
@@ -49,14 +49,14 @@ fix:
     uv run ruff check src/ --fix
     uv run ruff format src/
 
-# ── Testing ────────────────────────────────────────────────────────────────────
+# --- Testing ---
 
 # Run tests
 test:
     Set-Location '{{justfile_directory()}}'
     uv run pytest tests/ -q
 
-# ── Packaging ──────────────────────────────────────────────────────────────────
+# --- Packaging ---
 
 # Build MCPB bundle
 mcpb-pack:
@@ -68,12 +68,9 @@ build-native:
     Set-Location '{{justfile_directory()}}\native'
     .\build.ps1
 
-# Run CUA-NSIS smoke test
-cua-nsis-test:
-    Set-Location '{{justfile_directory()}}'
     uv run python scripts/cua-smoke.py
 
-# ── Hardening ──────────────────────────────────────────────────────────────────
+# --- Hardening ---
 
 # Execute Bandit security audit
 check-sec:
@@ -91,3 +88,5 @@ certify:
     uv run ruff check src/ --quiet
     uv run ruff format src/ --check --quiet
     uv run pytest tests/ -q
+
+# Bootstrap: install dev deps + pre-commit hook
