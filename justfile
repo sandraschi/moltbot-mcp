@@ -57,18 +57,13 @@ test:
     uv run pytest tests/ -q
 
 # --- Packaging ---
-
-# Build MCPB bundle
-mcpb-pack:
-    Set-Location '{{justfile_directory()}}'
-    pwsh -NoProfile -File scripts/build-mcpb.ps1
+# MCPB bundle via fleet.just (`just mcpb-pack` → mcpb/pack.ps1: fresh-stage src, validate, pack).
+# (Retired scripts/build-mcpb.ps1: hardcoded root, outdated protocol ref, no validate/stage.)
 
 # Build Tauri NSIS installer
 build-native:
     Set-Location '{{justfile_directory()}}\native'
     .\build.ps1
-
-    uv run python scripts/cua-smoke.py
 
 # --- Hardening ---
 
