@@ -11,12 +11,7 @@ default:
 
 # Install dependencies and setup
 bootstrap:
-    Set-Location '{{justfile_directory()}}'
-    uv sync --all-extras
-    Set-Location '{{justfile_directory()}}\webapp'
-    npm install
-    Set-Location '{{justfile_directory()}}'
-    if (Test-Path '.pre-commit-config.yaml') { pre-commit install 2>$null }
+    Set-Location '{{justfile_directory()}}'; uv sync --all-extras; Set-Location '{{justfile_directory()}}\webapp'; npm install; Set-Location '{{justfile_directory()}}'; if (Test-Path '.pre-commit-config.yaml') { pre-commit install 2>$null }
 
 # Serve the MCP server (stdio mode)
 serve:
@@ -25,11 +20,7 @@ serve:
 
 # Start full dev stack (backend API + frontend)
 dev:
-    Set-Location '{{justfile_directory()}}'
-    Start-Process pwsh -ArgumentList '-NoProfile', '-Command', 'uv run python webapp/server.py' -WindowStyle Hidden
-    Start-Sleep 3
-    Set-Location '{{justfile_directory()}}\webapp'
-    npm run dev
+    Set-Location '{{justfile_directory()}}'; Start-Process pwsh -ArgumentList '-NoProfile', '-Command', 'uv run python webapp/server.py' -WindowStyle Hidden; Start-Sleep 3; Set-Location '{{justfile_directory()}}\webapp'; npm run dev
 
 # --- Quality ---
 
@@ -62,8 +53,7 @@ test:
 
 # Build Tauri NSIS installer
 build-native:
-    Set-Location '{{justfile_directory()}}\native'
-    .\build.ps1
+    & '{{justfile_directory()}}\native\build.ps1'
 
 # --- Hardening ---
 
