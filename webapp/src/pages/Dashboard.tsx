@@ -20,6 +20,7 @@ export function Dashboard() {
     }
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only initial probe; load is stable (no props/state inputs).
   useEffect(() => {
     load();
   }, []);
@@ -74,26 +75,28 @@ export function Dashboard() {
             {gateway.error && (
               <p className="text-sm text-amber-400">{gateway.error}</p>
             )}
-            {(gateway as any).gateway_reachable && (gateway as any).status && (
+            {gateway.gateway_reachable && Boolean(gateway.status) && (
               <details className="mt-2">
                 <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300">
                   Status payload
                 </summary>
                 <pre className="mt-2 overflow-x-auto rounded bg-gray-800 p-3 text-xs text-gray-300">
-                  {JSON.stringify((gateway as any).status, null, 2)}
+                  {JSON.stringify(gateway.status, null, 2)}
                 </pre>
               </details>
             )}
-            {(gateway as any).gateway_reachable && (gateway as any).health && typeof (gateway as any).health === "object" && (
-              <details className="mt-2">
-                <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300">
-                  Health payload
-                </summary>
-                <pre className="mt-2 overflow-x-auto rounded bg-gray-800 p-3 text-xs text-gray-300">
-                  {JSON.stringify((gateway as any).health, null, 2)}
-                </pre>
-              </details>
-            )}
+            {gateway.gateway_reachable &&
+              Boolean(gateway.health) &&
+              typeof gateway.health === "object" && (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300">
+                    Health payload
+                  </summary>
+                  <pre className="mt-2 overflow-x-auto rounded bg-gray-800 p-3 text-xs text-gray-300">
+                    {JSON.stringify(gateway.health, null, 2)}
+                  </pre>
+                </details>
+              )}
           </div>
         )}
         <div className="mt-6 flex flex-wrap gap-3">

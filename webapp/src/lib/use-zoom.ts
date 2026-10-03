@@ -16,16 +16,20 @@ export function useZoom() {
     localStorage.setItem("tauri-zoom", String(level));
     try {
       const mod = await import("@tauri-apps/api/window");
-      const win = mod.getCurrentWindow();
-      if (win && typeof (win as any).setZoom === "function") {
-        await (win as any).setZoom(level);
+      const win = mod.getCurrentWindow() as unknown as {
+        setZoom?: (level: number) => Promise<void>;
+      };
+      if (win && typeof win.setZoom === "function") {
+        await win.setZoom(level);
         return;
       }
     } catch {
       /* dev browser */
     }
     const el = document.getElementsByTagName("html")[0];
-    if (el) (el.style as any).zoom = String(level);
+    if (el)
+      (el.style as CSSStyleDeclaration & { zoom?: string }).zoom =
+        String(level);
   }, []);
 
   useEffect(() => {
@@ -33,7 +37,10 @@ export function useZoom() {
       if (!e.ctrlKey) return;
       e.preventDefault();
       const delta = e.deltaY < 0 ? 1 : -1;
-      const next = Math.max(0, Math.min(zoomIdx + delta, ZOOM_LEVELS.length - 1));
+      const next = Math.max(
+        0,
+        Math.min(zoomIdx + delta, ZOOM_LEVELS.length - 1),
+      );
       if (next !== zoomIdx) {
         setZoomIdx(next);
         applyZoom(ZOOM_LEVELS[next]);

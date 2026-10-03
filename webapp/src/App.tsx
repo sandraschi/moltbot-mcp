@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { Layout } from "./components/Layout";
-import { Dashboard } from "./pages/Dashboard";
 import { Chat } from "./pages/Chat";
-import { Tools } from "./pages/Tools";
-import { Skills } from "./pages/Skills";
-import { Settings } from "./pages/Settings";
-import { HelpPage } from "./pages/HelpPage";
+import { Dashboard } from "./pages/Dashboard";
 import { Docs } from "./pages/Docs";
+import { HelpPage } from "./pages/HelpPage";
+import { Settings } from "./pages/Settings";
+import { Skills } from "./pages/Skills";
+import { Tools } from "./pages/Tools";
 
-export type View = "dashboard" | "chat" | "tools" | "skills" | "settings" | "help" | "docs";
+export type View =
+  | "dashboard"
+  | "chat"
+  | "tools"
+  | "skills"
+  | "settings"
+  | "help"
+  | "docs";
 
 function App() {
   const [view, setView] = useState<View>("dashboard");

@@ -1,12 +1,21 @@
-import { useEffect, useState } from "react";
-import { fetchSkills, fetchSkillContent } from "../api/client";
 import { BookOpen } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { fetchSkillContent, fetchSkills } from "../api/client";
 
 export function Skills() {
   const [skills, setSkills] = useState<string[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [content, setContent] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  // Stable per-content line ids: the rendered copy is static, so an id
+  // derived from position + text never changes while the content is shown.
+  const lines = useMemo(
+    () =>
+      (content ?? "")
+        .split("\n")
+        .map((text, n) => ({ id: `${n}:${text.slice(0, 32)}`, text })),
+    [content],
+  );
 
   useEffect(() => {
     fetchSkills()
@@ -54,14 +63,16 @@ export function Skills() {
           <div className="min-w-0 flex-1">
             {content ? (
               <div className="prose prose-invert max-w-none rounded-lg border border-gray-800 bg-gray-900/50 p-6 text-sm text-gray-300">
-                {content.split("\n").map((line, i) => (
-                  <p key={i} className="mb-1">
-                    {line}
+                {lines.map((line) => (
+                  <p key={line.id} className="mb-1">
+                    {line.text}
                   </p>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">Select a skill to view its content.</p>
+              <p className="text-sm text-gray-500">
+                Select a skill to view its content.
+              </p>
             )}
           </div>
         </div>

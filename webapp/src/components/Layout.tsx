@@ -1,18 +1,18 @@
-import { useState } from "react";
 import {
-  LayoutDashboard,
-  MessageSquare,
-  Wrench,
   BookOpen,
-  Settings2,
-  HelpCircle,
-  FileText,
-  Terminal,
   ChevronLeft,
   ChevronRight,
+  FileText,
+  HelpCircle,
+  LayoutDashboard,
+  MessageSquare,
+  Settings2,
+  Terminal,
+  Wrench,
 } from "lucide-react";
-import { LogModal } from "./LogModal";
+import { useState } from "react";
 import type { View } from "../App";
+import { LogModal } from "./LogModal";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -21,11 +21,19 @@ interface LayoutProps {
 }
 
 const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
-  { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: <LayoutDashboard className="h-4 w-4" />,
+  },
   { id: "chat", label: "Chat", icon: <MessageSquare className="h-4 w-4" /> },
   { id: "tools", label: "Tools", icon: <Wrench className="h-4 w-4" /> },
   { id: "skills", label: "Skills", icon: <BookOpen className="h-4 w-4" /> },
-  { id: "settings", label: "Settings", icon: <Settings2 className="h-4 w-4" /> },
+  {
+    id: "settings",
+    label: "Settings",
+    icon: <Settings2 className="h-4 w-4" />,
+  },
   { id: "help", label: "Help", icon: <HelpCircle className="h-4 w-4" /> },
   { id: "docs", label: "Docs", icon: <FileText className="h-4 w-4" /> },
 ];
@@ -43,13 +51,19 @@ export function Layout({ children, activeView, onNavigate }: LayoutProps) {
         }`}
       >
         <div className="flex items-center justify-between border-b border-gray-800 px-3 py-3">
-          {sidebarOpen && <span className="text-sm font-semibold text-gray-100">Moltbot</span>}
+          {sidebarOpen && (
+            <span className="text-sm font-semibold text-gray-100">Moltbot</span>
+          )}
           <button
             type="button"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="rounded p-1 text-gray-400 hover:bg-gray-800 hover:text-gray-200"
           >
-            {sidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+            {sidebarOpen ? (
+              <ChevronLeft className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
           </button>
         </div>
         <nav className="flex-1 space-y-1 px-2 py-3">

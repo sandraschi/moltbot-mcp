@@ -1,15 +1,17 @@
+import { Download, Eraser, Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Send, Download, Eraser } from "lucide-react";
 import { useLLMStore } from "../store/llm";
 
 const STORAGE_KEY = "moltbot-mcp-chat-history";
 const PERSONALITY_KEY = "moltbot-mcp-chat-personality";
 const MAX_MESSAGES = 100;
-const SKILL_PREPROMPT = "You are an AI assistant with access to the Moltbot Gateway. You can check gateway status, send messages, run the agent, and list channels. Use moltbot_ops for all gateway operations. Be concise and helpful.";
+const SKILL_PREPROMPT =
+  "You are an AI assistant with access to the Moltbot Gateway. You can check gateway status, send messages, run the agent, and list channels. Use moltbot_ops for all gateway operations. Be concise and helpful.";
 
 const PERSONALITIES: Record<string, string> = {
   assistant: "You are a helpful assistant. Answer concisely and accurately.",
-  expert: "You are an expert Moltbot Gateway operator. Provide detailed technical guidance.",
+  expert:
+    "You are an expert Moltbot Gateway operator. Provide detailed technical guidance.",
   summarizer: "You are a summarizer. Keep responses brief and to the point.",
   custom: "",
 };
@@ -38,15 +40,21 @@ export function Chat() {
   });
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [personality, setPersonality] = useState(() => localStorage.getItem(PERSONALITY_KEY) || "assistant");
+  const [personality, setPersonality] = useState(
+    () => localStorage.getItem(PERSONALITY_KEY) || "assistant",
+  );
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scroll-on-mount only; the ref object is stable and deliberately not subscribed.
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-MAX_MESSAGES)));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(messages.slice(-MAX_MESSAGES)),
+    );
   }, [messages]);
 
   useEffect(() => {
@@ -60,14 +68,22 @@ export function Chat() {
 
   const sendMessage = useCallback(async () => {
     if (!input.trim() || loading) return;
-    const userMsg: Message = { role: "user", content: input.trim(), ts: new Date().toISOString() };
+    const userMsg: Message = {
+      role: "user",
+      content: input.trim(),
+      ts: new Date().toISOString(),
+    };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
 
     try {
-      const provider = detectedProviders.find((p) => p.name === selectedProvider);
-      const baseUrl = provider ? `http://127.0.0.1:${provider.port}` : "http://127.0.0.1:11434";
+      const provider = detectedProviders.find(
+        (p) => p.name === selectedProvider,
+      );
+      const baseUrl = provider
+        ? `http://127.0.0.1:${provider.port}`
+        : "http://127.0.0.1:11434";
       const model = selectedModel || "llama3";
 
       const r = await fetch(`${baseUrl}/v1/chat/completions`, {
@@ -77,7 +93,9 @@ export function Chat() {
           model,
           messages: [
             { role: "system", content: buildSystemPrompt() },
-            ...messages.slice(-10).map((m) => ({ role: m.role, content: m.content })),
+            ...messages
+              .slice(-10)
+              .map((m) => ({ role: m.role, content: m.content })),
             { role: "user", content: input.trim() },
           ],
           stream: false,
@@ -86,16 +104,31 @@ export function Chat() {
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const data = await r.json();
       const reply = data.choices?.[0]?.message?.content || "No response";
-      setMessages((prev) => [...prev, { role: "assistant", content: reply, ts: new Date().toISOString() }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: reply, ts: new Date().toISOString() },
+      ]);
     } catch (e) {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: `Error: ${e instanceof Error ? e.message : String(e)}`, ts: new Date().toISOString() },
+        {
+          role: "assistant",
+          content: `Error: ${e instanceof Error ? e.message : String(e)}`,
+          ts: new Date().toISOString(),
+        },
       ]);
     } finally {
       setLoading(false);
     }
-  }, [input, loading, messages, selectedProvider, selectedModel, detectedProviders, buildSystemPrompt]);
+  }, [
+    input,
+    loading,
+    messages,
+    selectedProvider,
+    selectedModel,
+    detectedProviders,
+    buildSystemPrompt,
+  ]);
 
   const handleExport = () => {
     if (messages.length === 0) return;
@@ -119,7 +152,10 @@ export function Chat() {
   const hasLLM = detectedProviders.length > 0;
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col px-4 py-6 sm:px-6" data-testid="chat-page">
+    <div
+      className="mx-auto flex max-w-4xl flex-col px-4 py-6 sm:px-6"
+      data-testid="chat-page"
+    >
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-semibold text-gray-100">Chat</h1>
         <div className="flex items-center gap-3">
@@ -160,7 +196,8 @@ export function Chat() {
 
       {!hasLLM && (
         <div className="mb-4 rounded border border-amber-700 bg-amber-900/20 p-3 text-sm text-amber-300">
-          No local LLM detected. Start Ollama or LM Studio to enable AI features.
+          No local LLM detected. Start Ollama or LM Studio to enable AI
+          features.
         </div>
       )}
 
@@ -186,8 +223,11 @@ export function Chat() {
             </div>
           </div>
         )}
-        {messages.map((m, i) => (
-          <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+        {messages.map((m) => (
+          <div
+            key={`${m.ts ?? "local"}-${m.role}-${m.content.length}`}
+            className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+          >
             <div
               className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
                 m.role === "user"

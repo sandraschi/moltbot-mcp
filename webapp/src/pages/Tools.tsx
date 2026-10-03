@@ -1,6 +1,6 @@
+import { Wrench } from "lucide-react";
 import { useEffect, useState } from "react";
 import { fetchCapabilities, type ToolInfo } from "../api/client";
-import { Wrench } from "lucide-react";
 
 export function Tools() {
   const [tools, setTools] = useState<ToolInfo[]>([]);
@@ -35,7 +35,9 @@ export function Tools() {
           >
             <div className="flex items-center gap-2">
               <Wrench className="h-4 w-4 text-blue-400" />
-              <h3 className="font-mono text-sm font-medium text-gray-200">{tool.name}</h3>
+              <h3 className="font-mono text-sm font-medium text-gray-200">
+                {tool.name}
+              </h3>
             </div>
             {tool.description && (
               <p className="mt-1 text-sm text-gray-400">{tool.description}</p>

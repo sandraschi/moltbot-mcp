@@ -32,6 +32,7 @@ export function LogModal({ open, onClose }: LogModalProps) {
     }
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reload-on-open only; load is redefined per render and subscribing to it would refetch in a loop.
   useEffect(() => {
     if (open) load();
   }, [open]);
@@ -49,6 +50,7 @@ export function LogModal({ open, onClose }: LogModalProps) {
   if (!open) return null;
 
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: backdrop dismissal is pointer-only by design; keyboard path is the Close button + the global Escape listener above.
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
       role="dialog"
@@ -56,12 +58,16 @@ export function LogModal({ open, onClose }: LogModalProps) {
       aria-labelledby="log-modal-title"
       onClick={onClose}
     >
+      {/* biome-ignore lint/a11y/noStaticElementInteractions lint/a11y/useKeyWithClickEvents: content wrapper only stops backdrop-click propagation; keyboard dismissal is the Close button + the global Escape listener. */}
       <div
         className="flex max-h-[85vh] w-full max-w-3xl flex-col rounded-lg border border-gray-700 bg-gray-900 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-gray-700 px-4 py-3">
-          <h2 id="log-modal-title" className="text-lg font-medium text-gray-100">
+          <h2
+            id="log-modal-title"
+            className="text-lg font-medium text-gray-100"
+          >
             Server logs
           </h2>
           <div className="flex gap-2">
@@ -95,13 +101,15 @@ export function LogModal({ open, onClose }: LogModalProps) {
           )}
           {data?.entries && data.entries.length > 0 && (
             <ul className="space-y-1">
-              {data.entries.map((entry: LogEntry, i: number) => (
+              {data.entries.map((entry: LogEntry) => (
                 <li
-                  key={`${entry.ts}-${i}`}
+                  key={`${entry.ts}-${entry.level}-${entry.message.length}`}
                   className={`flex flex-wrap gap-x-2 gap-y-0.5 ${LEVEL_CLASS[entry.level] ?? "text-gray-400"}`}
                 >
                   <span className="shrink-0 text-gray-500">{entry.ts}</span>
-                  <span className="shrink-0 font-semibold">[{entry.level}]</span>
+                  <span className="shrink-0 font-semibold">
+                    [{entry.level}]
+                  </span>
                   <span className="min-w-0 break-all">{entry.message}</span>
                 </li>
               ))}

@@ -13,7 +13,10 @@ interface LLMState {
   selectedModel: string;
   availableModels: string[];
   gpuDetected: boolean;
-  setProviders: (providers: ProviderInfo[], status: Record<string, "probing" | "detected" | "not_found">) => void;
+  setProviders: (
+    providers: ProviderInfo[],
+    status: Record<string, "probing" | "detected" | "not_found">,
+  ) => void;
   setSelectedProvider: (p: string) => void;
   setSelectedModel: (m: string) => void;
   setAvailableModels: (models: string[]) => void;
@@ -27,7 +30,8 @@ export const useLLMStore = create<LLMState>((set) => ({
   selectedModel: "",
   availableModels: [],
   gpuDetected: false,
-  setProviders: (providers, status) => set({ detectedProviders: providers, providerStatus: status }),
+  setProviders: (providers, status) =>
+    set({ detectedProviders: providers, providerStatus: status }),
   setSelectedProvider: (p) => set({ selectedProvider: p }),
   setSelectedModel: (m) => set({ selectedModel: m }),
   setAvailableModels: (m) => set({ availableModels: m }),
