@@ -1,15 +1,17 @@
-﻿# Per-repo fleet start config for moltbot-mcp
+# Per-repo fleet start config for moltbot-mcp
 # Edit ports/backend target here - start.ps1 is fleet-standard.
 @{
     Name         = 'moltbot-mcp'
     BackendPort  = 10731
     FrontendPort = 10730
-    HealthPath   = '/health'
-    WebRoot      = 'D:\Dev\repos\moltbot-mcp\web_sota'
+    HealthPath   = '/api/health'
+    WebRoot      = 'web_sota'
     Backend = @{
-        Kind          = 'uvicorn'
-        UvicornTarget = 'moltbot_mcp.api.main:app'
+        Kind          = 'uvicorn-web-app'
+        UvicornTarget = 'web_sota.backend.server:app'
+        WorkDir       = '.'
         SyncExtras    = @('dev')
+        SyncOnStart  = $true
         Env           = @{ WEB_PORT = '10731' }
     }
     Frontend = @{
