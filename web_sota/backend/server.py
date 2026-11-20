@@ -17,7 +17,17 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title="Moltbot MCP", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:10730",
+        "http://127.0.0.1:10730",
+        "tauri://localhost",
+        "https://tauri.localhost",
+    ],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(logging_router)
 
 @app.get("/health")
